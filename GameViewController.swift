@@ -25,7 +25,10 @@ class GameViewController: UIViewController {
     }
     func handleMatches() {
         let chains = level.removeMatches()
-        // TODO: do something with the chains set
+        
+        scene.animateMatchedCookies(chains) {
+            self.view.userInteractionEnabled = true
+        }
     }
     func handleSwipe(swap: Swap) {
         view.userInteractionEnabled = false
