@@ -6,7 +6,10 @@
 //  Copyright (c) 2014 Tairi Buchanan. All rights reserved.
 //
 
-struct Swap: Printable {
+struct Swap: Printable, Hashable {
+    var hashValue: Int {
+        return cookieA.hashValue ^ cookieB.hashValue
+    }
     let cookieA: Cookie
     let cookieB: Cookie
     
@@ -18,4 +21,8 @@ struct Swap: Printable {
     var description: String {
         return "swap \(cookieA) with \(cookieB)"
     }
+}
+func ==(lhs: Swap, rhs: Swap) -> Bool {
+    return (lhs.cookieA == rhs.cookieA && lhs.cookieB == rhs.cookieB) ||
+        (lhs.cookieB == rhs.cookieA && lhs.cookieA == rhs.cookieB)
 }
