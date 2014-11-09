@@ -9,10 +9,11 @@
 
 import SpriteKit
 
-enum CookieType: Int {
+enum CookieType: Int, Printable {
     case Unknown = 0, Croissant, Cupcake, Danish, Donut, Macaroon, SugarCookie
     
     var spriteName: String
+        
     {
         let spriteNames =
         [
@@ -35,6 +36,9 @@ enum CookieType: Int {
     static func random() -> CookieType
     {
         return CookieType(rawValue: Int(arc4random_uniform(6)) + 1)!
+    }
+    var description: String {
+        return spriteName
     }
 }
 
