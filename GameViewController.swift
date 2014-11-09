@@ -23,6 +23,15 @@ class GameViewController: UIViewController {
     override func supportedInterfaceOrientations() -> Int {
         return Int(UIInterfaceOrientationMask.AllButUpsideDown.rawValue)
     }
+    func handleSwipe(swap: Swap) {
+        view.userInteractionEnabled = false
+        
+        level.performSwap(swap)
+        
+        scene.animateSwap(swap) {
+            self.view.userInteractionEnabled = true
+        }
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -37,7 +46,8 @@ class GameViewController: UIViewController {
         
         level = Level(filename: "Level_3")
         scene.level = level
-        
+        scene.addTiles()
+        scene.swipeHandler = handleSwipe
         // Present the scene.
         skView.presentScene(scene)
         
