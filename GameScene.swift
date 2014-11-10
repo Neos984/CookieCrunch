@@ -46,6 +46,7 @@ class GameScene: SKScene {
         
         tilesLayer.position = layerPosition
         gameLayer.addChild(tilesLayer)
+        gameLayer.hidden = true
         cookiesLayer.position = layerPosition
         gameLayer.addChild(cookiesLayer)
         anchorPoint = CGPoint(x: 0.5, y: 0.5)
@@ -59,6 +60,19 @@ class GameScene: SKScene {
             sprite.position = pointForColumn(cookie.column, row:cookie.row)
             cookiesLayer.addChild(sprite)
             cookie.sprite = sprite
+            // Give each cookie sprite a small, random delay. Then fade them in.
+            sprite.alpha = 0
+            sprite.xScale = 0.5
+            sprite.yScale = 0.5
+            
+            sprite.runAction(
+                SKAction.sequence([
+                    SKAction.waitForDuration(0.25, withRange: 0.5),
+                    SKAction.group([
+                        SKAction.fadeInWithDuration(0.25),
+                        SKAction.scaleTo(1.0, duration: 0.25)
+                        ])
+                    ]))
         }
     }
     
@@ -318,6 +332,22 @@ class GameScene: SKScene {
         let moveAction = SKAction.moveBy(CGVector(dx: 0, dy: 3), duration: 0.7)
         moveAction.timingMode = .EaseOut
         scoreLabel.runAction(SKAction.sequence([moveAction, SKAction.removeFromParent()]))
+    }
+    func animateGameOver(completion: () -> ()) {
+        let action = SKAction.moveBy(CGVector(dx: 0, dy: -size.height), duration: 0.3)
+        action.timingMode = .EaseIn
+        gameLayer.runAction(action, completion: completion)
+    }
+    
+    func animateBeginGame(completion: () -> ()) {
+        gameLayer.hidden = false
+        gameLayer.position = CGPoint(x: 0, y: size.height)
+        let action = SKAction.moveBy(CGVector(dx: 0, dy: -size.height), duration: 0.3)
+        action.timingMode = .EaseOut
+        gameLayer.runAction(action, completion: completion)
+    }
+    func removeAllCookieSprites() {
+        cookiesLayer.removeAllChildren()
     }
 }
 

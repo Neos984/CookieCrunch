@@ -7,6 +7,9 @@
 //
 import UIKit
 import SpriteKit
+import AVFoundation
+
+
 
 class GameViewController: UIViewController {
     var scene: GameScene!
@@ -20,6 +23,17 @@ class GameViewController: UIViewController {
     @IBOutlet weak var scoreLabel: UILabel!
     @IBOutlet weak var gameOverPanel: UIImageView!
     var tapGestureRecognizer: UITapGestureRecognizer!
+    @IBOutlet weak var shuffleButton: UIButton!
+    @IBAction func shuffleButtonPressed(AnyObject) {
+        shuffle()
+        decrementMoves()
+    }
+    lazy var backgroundMusic: AVAudioPlayer = {
+        let url = NSBundle.mainBundle().URLForResource("North End Night Life", withExtension: "mp3")
+        let player = AVAudioPlayer(contentsOfURL: url, error: nil)
+        player.numberOfLoops = -1
+        return player
+        }()
     
     override func prefersStatusBarHidden() -> Bool {
         return true
@@ -89,6 +103,7 @@ class GameViewController: UIViewController {
         gameOverPanel.hidden = true
         // Present the scene.
         skView.presentScene(scene)
+        backgroundMusic.play()
         
         beginGame()
     }
@@ -98,10 +113,14 @@ class GameViewController: UIViewController {
         score = 0
         updateLabels()
         level.resetComboMultiplier()
+        scene.animateBeginGame() {
+            self.shuffleButton.hidden = false
+        }
         shuffle()
-    }
+        }
     
     func shuffle() {
+         scene.removeAllCookieSprites()
         let newCookies = level.shuffle()
         scene.addSpritesForCookies(newCookies)
     }
@@ -130,8 +149,11 @@ class GameViewController: UIViewController {
         gameOverPanel.hidden = false
         scene.userInteractionEnabled = false
         
-        tapGestureRecognizer = UITapGestureRecognizer(target: self, action: "hideGameOver")
-        view.addGestureRecognizer(tapGestureRecognizer)
+        scene.animateGameOver() {
+            self.tapGestureRecognizer = UITapGestureRecognizer(target: self, action: "hideGameOver")
+            self.view.addGestureRecognizer(self.tapGestureRecognizer)
+        }
+        shuffleButton.hidden = true
     }
     func hideGameOver() {
         view.removeGestureRecognizer(tapGestureRecognizer)
