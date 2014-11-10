@@ -11,11 +11,15 @@ import Foundation
 let NumColumns = 9
 let NumRows = 9
 
+
 class Level {
     private var cookies = Array2D<Cookie>(columns: NumColumns, rows: NumRows)
     private var tiles = Array2D<Tile>(columns: NumColumns, rows: NumRows)
     private var possibleSwaps = Set<Swap>()
-    
+
+    let targetScore: Int!
+    let maximumMoves: Int!
+
     func cookieAtColumn(column: Int, row: Int) -> Cookie? {
         assert(column >= 0 && column < NumColumns)
         assert(row >= 0 && row < NumRows)
@@ -58,6 +62,7 @@ class Level {
                 
                 // 4
                 set.addElement(cookie)
+                    
                 }
             }
         }
@@ -86,6 +91,9 @@ class Level {
                         }
                     }
                 }
+                
+                targetScore = (dictionary["targetScore"] as NSNumber).integerValue
+                maximumMoves = (dictionary["moves"] as NSNumber).integerValue
             }
         }
     }
