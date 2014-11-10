@@ -25,10 +25,17 @@ class GameViewController: UIViewController {
     }
     func handleMatches() {
         let chains = level.removeMatches()
+        if chains.count == 0 {
+            beginNextTurn()
+            return
+        }
         scene.animateMatchedCookies(chains) {
             let columns = self.level.fillHoles()
             self.scene.animateFallingCookies(columns) {
-                self.view.userInteractionEnabled = true
+                let columns = self.level.topUpCookies()
+                self.scene.animateNewCookies(columns) {
+                    self.handleMatches()
+                }
             }
         }
     }
@@ -60,7 +67,7 @@ class GameViewController: UIViewController {
         scene = GameScene(size: skView.bounds.size)
         scene.scaleMode = .AspectFill
         
-        level = Level(filename: "Level_3")
+        level = Level(filename: "Level_1")
         scene.level = level
         scene.addTiles()
         scene.swipeHandler = handleSwipe
@@ -77,5 +84,9 @@ class GameViewController: UIViewController {
     func shuffle() {
         let newCookies = level.shuffle()
         scene.addSpritesForCookies(newCookies)
+    }
+    func beginNextTurn() {
+        level.detectPossibleSwaps()
+        view.userInteractionEnabled = true
     }
 }
