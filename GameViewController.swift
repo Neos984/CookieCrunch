@@ -103,10 +103,15 @@ class GameViewController: UIViewController {
     func beginNextTurn() {
         level.detectPossibleSwaps()
         view.userInteractionEnabled = true
+        decrementMoves()
     }
     func updateLabels() {
         targetLabel.text = NSString(format: "%ld", level.targetScore)
         movesLabel.text = NSString(format: "%ld", movesLeft)
         scoreLabel.text = NSString(format: "%ld", score)
+    }
+    func decrementMoves() {
+        --movesLeft
+        updateLabels()
     }
 }
