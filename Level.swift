@@ -16,6 +16,7 @@ class Level {
     private var cookies = Array2D<Cookie>(columns: NumColumns, rows: NumRows)
     private var tiles = Array2D<Tile>(columns: NumColumns, rows: NumRows)
     private var possibleSwaps = Set<Swap>()
+    private var comboMultiplier = 0
 
     let targetScore: Int!
     let maximumMoves: Int!
@@ -320,5 +321,7 @@ class Level {
             chain.score = 60 * (chain.length - 2)
         }
     }
-
+    func resetComboMultiplier() {
+        comboMultiplier = 1
+    }
 }
